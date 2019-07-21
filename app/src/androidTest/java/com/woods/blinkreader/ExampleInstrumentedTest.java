@@ -1,4 +1,4 @@
-package com.example.blinkreader;
+package com.woods.blinkreader;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.blinkreader", appContext.getPackageName());
+        assertEquals("com.woods.blinkreader", appContext.getPackageName());
     }
 }

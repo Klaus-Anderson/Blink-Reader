@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BlinkReader</string>
+    <string name="title_activity_reading_activty">ReadingActivty</string>
+    <string name="action_settings">Settings</string>
 </resources>

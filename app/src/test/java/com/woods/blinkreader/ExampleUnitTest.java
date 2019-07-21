@@ -1,4 +1,4 @@
-package com.example.blinkreader;
+package com.woods.blinkreader;
 
 import org.junit.Test;
 
