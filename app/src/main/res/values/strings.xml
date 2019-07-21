@@ -2,4 +2,6 @@
     <string name="app_name">BlinkReader</string>
     <string name="title_activity_reading_activty">ReadingActivty</string>
     <string name="action_settings">Settings</string>
+    <string name="paste_icon_content_description">Paste Content to read</string>
+    <string name="paste_error">Could not paste content</string>
 </resources>

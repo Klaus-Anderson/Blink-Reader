@@ -8,17 +8,17 @@ import android.view.ViewGroup;
 
 import com.woods.blinkreader.R;
 
-/**
- * A placeholder fragment containing a simple view.
- */
+import static com.woods.blinkreader.utils.BundleStrings.READING_FRAGMENT_TEXT_KEY;
+
 public class ReadingFragment extends Fragment {
 
-    public ReadingFragment() {
-    }
+    private String toReadString;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_reading, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View toReturnView = inflater.inflate(R.layout.fragment_reading, container, false);
+        Bundle argument = getArguments();
+        toReadString = argument.getString(READING_FRAGMENT_TEXT_KEY);
+        return toReturnView;
     }
 }
