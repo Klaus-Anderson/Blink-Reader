@@ -55,7 +55,8 @@ public class ReadingActivity extends AppCompatActivity {
                         pasteArguments.putString(READING_FRAGMENT_TEXT_KEY, pasteData);
                         pasteFragment = new ReadingFragment();
                         pasteFragment.setArguments(pasteArguments);
-                        pasteFragmentTransaction = pasteFragmentTransaction.add(pasteFragment, pasteData);
+                        pasteFragmentTransaction = pasteFragmentTransaction.add(
+                                R.id.fragment_container, pasteFragment, pasteData);
                     } else {
                         pasteFragmentTransaction = pasteFragmentTransaction.show(pasteFragment);
                     }
