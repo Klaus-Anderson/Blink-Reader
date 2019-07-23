@@ -22,8 +22,6 @@ import static com.woods.blinkreader.utils.BundleStrings.READING_FRAGMENT_TEXT_KE
 
 public class ReadingActivity extends AppCompatActivity {
 
-    private static final int CONTENT_VIEW_ID = 10101010;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
