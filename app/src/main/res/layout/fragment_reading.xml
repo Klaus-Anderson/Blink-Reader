@@ -2,8 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.ReadingFragment"
-    tools:showIn="@layout/activity_reading">
+    tools:context=".fragment.ReadingFragment">
 
     <data>
 
@@ -25,14 +24,109 @@
             android:textSize="@dimen/text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="text" />
+
+        <ImageView
+            android:id="@+id/replay_30_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(-30)}"
+            android:src="@drawable/ic_replay_30_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/replay_10_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/replay_10_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(-10)}"
+            android:src="@drawable/ic_replay_10_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/replay_5_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/replay_30_button" />
+
+        <ImageView
+            android:id="@+id/replay_5_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(-5)}"
+            android:src="@drawable/ic_replay_5_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/replay_1_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/replay_10_button" />
+
+        <ImageView
+            android:id="@+id/replay_1_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(-1)}"
+            android:src="@drawable/ic_replay_5_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/replay_5_button" />
+
+        <ImageView
+            android:id="@+id/playPauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pause_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/forward_5_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/replay_1_button" />
+
+        <ImageView
+            android:id="@+id/forward_5_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(5)}"
+            android:src="@drawable/ic_forward_5_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/forward_10_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/playPauseButton" />
+
+        <ImageView
+            android:id="@+id/forward_10_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(10)}"
+            android:src="@drawable/ic_forward_10_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toStartOf="@+id/forward_30_button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/forward_5_button" />
+
+        <ImageView
+            android:id="@+id/forward_30_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> readingViewModel.onClick(30)}"
+            android:src="@drawable/ic_forward_30_black_24dp"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/forward_10_button" />
 
         <SeekBar
             android:id="@+id/reading_seekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:max="@{readingViewModel.maxProgressLiveData}"
+            android:maxHeight="6dp"
+            android:minHeight="6dp"
             android:onProgressChanged="@{readingViewModel.onProgressChanged}"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="10dp"
+            android:progress="@{readingViewModel.readingProgressLiveData}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

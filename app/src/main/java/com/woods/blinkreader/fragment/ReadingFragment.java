@@ -4,10 +4,12 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import com.woods.blinkreader.R;
 import com.woods.blinkreader.databinding.FragmentReadingBinding;
@@ -29,7 +31,7 @@ public class ReadingFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View toReturnView = inflater.inflate(R.layout.fragment_reading, container, false);
 
         Bundle arguments = getArguments();
@@ -42,6 +44,7 @@ public class ReadingFragment extends Fragment {
             fragmentReadingBinding.setReadingViewModel(readingViewModel);
             readingViewModel.postText(Objects.requireNonNull(arguments.getString(READING_FRAGMENT_TEXT_KEY)));
         }
+
 
         return toReturnView;
     }
