@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 
 import com.woods.blinkreader.R;
 import com.woods.blinkreader.databinding.FragmentReadingBinding;
@@ -42,9 +41,9 @@ public class ReadingFragment extends Fragment {
                 fragmentReadingBinding != null) {
             fragmentReadingBinding.setLifecycleOwner(this);
             fragmentReadingBinding.setReadingViewModel(readingViewModel);
+            fragmentReadingBinding.setContext(getActivity());
             readingViewModel.postText(Objects.requireNonNull(arguments.getString(READING_FRAGMENT_TEXT_KEY)));
         }
-
 
         return toReturnView;
     }
