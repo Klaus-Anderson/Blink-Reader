@@ -1,31 +1,49 @@
 package com.woods.blinkreader.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.Preference;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.woods.blinkreader.R;
+import com.woods.blinkreader.fragment.PreferencesFragment;
 import com.woods.blinkreader.fragment.ReadingFragment;
+import com.woods.blinkreader.viewmodel.ReadingViewModel;
+
+import java.util.prefs.Preferences;
 
 import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
 import static com.woods.blinkreader.utils.BundleStrings.READING_FRAGMENT_TEXT_KEY;
 
-public class ReadingActivity extends AppCompatActivity {
+public class ReadingActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private ReadingViewModel readingViewModel;
+    private String readingSpeedString = "readingSpeed";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reading);
+
+        readingViewModel = ViewModelProviders.of(this)
+                .get(ReadingViewModel.class);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -41,14 +59,14 @@ public class ReadingActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_paste:
                 String pasteData = getPasteData();
-                if(pasteData != null) {
+                if (pasteData != null) {
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction pasteFragmentTransaction = fragmentManager.beginTransaction();
                     Fragment pasteFragment = fragmentManager.findFragmentByTag(pasteData);
-                    if(pasteFragment == null) {
+                    if (pasteFragment == null) {
                         Bundle pasteArguments = new Bundle();
                         pasteArguments.putString(READING_FRAGMENT_TEXT_KEY, pasteData);
                         pasteFragment = new ReadingFragment();
@@ -64,9 +82,23 @@ public class ReadingActivity extends AppCompatActivity {
                     toast.show();
                 }
                 break;
+            case R.id.action_settings:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction preferencesFragmentTransaction = fragmentManager.beginTransaction();
+                Fragment preferencesFragment = fragmentManager.findFragmentByTag(PreferencesFragment.TAG);
+                if (preferencesFragment == null) {
+                    preferencesFragment = new PreferencesFragment();
+                    preferencesFragmentTransaction = preferencesFragmentTransaction.add(
+                            R.id.fragment_container, preferencesFragment, PreferencesFragment.TAG);
+                } else {
+                    preferencesFragmentTransaction = preferencesFragmentTransaction.show(preferencesFragment);
+                }
+                preferencesFragmentTransaction.commit();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Nullable
     private String getPasteData() {
@@ -89,4 +121,21 @@ public class ReadingActivity extends AppCompatActivity {
         return null;
     }
 
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(fragmentManager.findFragmentByTag(PreferencesFragment.TAG)!=null){
+            fragmentTransaction.remove(fragmentManager.findFragmentByTag(PreferencesFragment.TAG)).commit();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (readingSpeedString.equals(key)) {
+            readingViewModel.setWpm(sharedPreferences.getInt(key, 120));
+        }
+    }
 }

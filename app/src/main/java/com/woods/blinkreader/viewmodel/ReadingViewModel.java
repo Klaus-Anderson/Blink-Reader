@@ -26,6 +26,7 @@ public class ReadingViewModel extends ViewModel {
     private final MutableLiveData<Integer> readingProgressLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> maxProgressLiveData = new MutableLiveData<>();
     private final MutableLiveData<Integer> playPuaseButtonResIdLiveData = new MutableLiveData<>();
+    private double wpm = 120;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private List<String> wordList;
 
@@ -44,6 +45,10 @@ public class ReadingViewModel extends ViewModel {
 
     public LiveData<Integer> getPlayPuaseButtonResIdLiveData() {
         return playPuaseButtonResIdLiveData;
+    }
+
+    public void setWpm(int wpm) {
+        this.wpm = wpm;
     }
 
     public void postText(@NonNull String toReadString) {
@@ -88,7 +93,8 @@ public class ReadingViewModel extends ViewModel {
     }
 
     private Disposable getTimerDisposable() {
-        return Observable.interval(500L, TimeUnit.MILLISECONDS)
+        return Observable.interval(
+                (long)(((60/wpm))*1000), TimeUnit.MILLISECONDS)
                 .timeInterval()
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(longTimed -> {
@@ -134,4 +140,6 @@ public class ReadingViewModel extends ViewModel {
             textToDisplayLiveData.postValue(wordList.get(progress));
         }
     }
+
+
 }
