@@ -4,5 +4,5 @@
     <string name="action_settings">Settings</string>
     <string name="paste_icon_content_description">Paste Content to read</string>
     <string name="paste_error">Could not paste content</string>
-    <string name="copy_text_instructions">Copy text to your clipboard, click on the paste icon on App Bar to speed read it!</string>
+    <string name="copy_text_instructions">Copy text to your clipboard, then click on the paste icon on App Bar to speed read it!</string>
 </resources>
