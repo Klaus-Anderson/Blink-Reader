@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/action_paste"
-        android:icon="@drawable/ic_content_paste_black_24dp"
+        android:icon="@drawable/ic_content_paste_24dp"
         android:title="@string/paste_icon_content_description"
         app:showAsAction="ifRoom"/>
 

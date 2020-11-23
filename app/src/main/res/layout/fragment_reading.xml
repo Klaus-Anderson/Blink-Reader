@@ -5,7 +5,7 @@
     tools:context=".fragment.ReadingFragment">
 
     <data>
-        <import type="android.support.v4.content.ContextCompat" />
+        <import type="androidx.core.content.ContextCompat" />
         <variable
             name="context"
             type="android.content.Context" />
@@ -14,7 +14,7 @@
             type="com.woods.blinkreader.viewmodel.ReadingViewModel" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{readingViewModel.textToDisplayLiveData}"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/color_primary_light"
             android:textSize="@dimen/text_size"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="text" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/button_constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/forward_10_button"
                 app:layout_constraintTop_toTopOf="parent" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <SeekBar
             android:id="@+id/reading_seekbar"
@@ -147,13 +147,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:id="@+id/buttons_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{readingViewModel.buttonVisibilityLiveData}"
             app:constraint_referenced_ids="reading_seekbar, button_constraint_layout" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
