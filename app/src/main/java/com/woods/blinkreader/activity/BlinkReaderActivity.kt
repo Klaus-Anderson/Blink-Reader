@@ -12,11 +12,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
-import com.woods.blinkreader.viewmodel.ReadingViewModel
+import com.woods.blinkreader.viewmodel.BlinkReaderViewModel
 
 
 class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
-    private val readingViewModel: ReadingViewModel by viewModels()
+    private val blinkReaderViewModel: BlinkReaderViewModel by viewModels()
 
     @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         if (sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
-            readingViewModel.setWpm(sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0))
+            blinkReaderViewModel.setWpm(sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0))
         }
         if (sharedPreferences.getBoolean(getString(R.string.dark_theme_preference_key), false)) {
             setTheme(R.style.DarkTheme)
@@ -47,7 +47,7 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        switch (item.getItemId()) {
         if (R.id.action_paste == item.itemId) {
-            readingViewModel.postClipboardData((getSystemService(CLIPBOARD_SERVICE) as ClipboardManager),
+            blinkReaderViewModel.postClipboardData((getSystemService(CLIPBOARD_SERVICE) as ClipboardManager),
                     Toast.makeText(this, R.string.paste_error, Toast.LENGTH_SHORT))
             //                break;
         }
@@ -56,7 +56,7 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (getString(R.string.reading_speed_preference_key) == key) {
-            readingViewModel.setWpm(sharedPreferences.getInt(key, 120))
+            blinkReaderViewModel.setWpm(sharedPreferences.getInt(key, 120))
         } else if (getString(R.string.dark_theme_preference_key) == key) {
             setTheme(if (sharedPreferences.getBoolean(key, false)) {
                 R.style.DarkTheme

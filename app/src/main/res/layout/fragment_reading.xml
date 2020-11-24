@@ -11,7 +11,7 @@
             type="android.content.Context" />
         <variable
             name="readingViewModel"
-            type="com.woods.blinkreader.viewmodel.ReadingViewModel" />
+            type="com.woods.blinkreader.viewmodel.BlinkReaderViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
