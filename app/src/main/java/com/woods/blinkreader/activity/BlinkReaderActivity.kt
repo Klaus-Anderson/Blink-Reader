@@ -14,16 +14,19 @@ import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
 import com.woods.blinkreader.viewmodel.ReadingViewModel
 
-class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
+class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val readingViewModel: ReadingViewModel by viewModels()
 
     @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reading)
+
+        setContentView(R.layout.activity_blink_reader)
+        setTitle(R.string.app_name)
+
+        // get and display preferences
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         prefs.registerOnSharedPreferenceChangeListener(this)
-        setTitle(R.string.app_name)
         if (prefs.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
             readingViewModel.setWpm(prefs.getInt(getString(R.string.reading_speed_preference_key), 0))
         }

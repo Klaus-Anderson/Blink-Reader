@@ -1,7 +1,6 @@
 package com.woods.blinkreader.viewmodel
 
 import android.app.Application
-import android.content.ClipDescription
 import android.content.ClipboardManager
 import android.view.View
 import android.widget.SeekBar
@@ -24,7 +23,10 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
     val buttonVisibilityLiveData = MutableLiveData<Int>()
     private val wpmLiveData = MutableLiveData<Double?>()
     private val compositeDisposable = CompositeDisposable()
-    private var wordList: MutableList<String>? = null
+
+    // text that is currently being read
+    private var readingTextLiveData = MutableLiveData<String>()
+    private var wordListLiveData = MutableLiveData<MutableList<String>>()
 
     init {
         textToDisplayLiveData.value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
@@ -74,9 +76,9 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
     private fun togglePlay() {
         getTimerObservable()?.let { timerObservable ->
             if (!isPlaying()) {
-                playPauseButtonResIdLiveData.value = R.drawable.ic_pause_black_24dp
+                playPauseButtonResIdLiveData.value = R.drawable.ic_pause_24dp
                 readingProgressLiveData.value?.let { readingProgress ->
-                    wordList?.let {
+                    wordListLiveData.value?.let {
                         if (readingProgress == it.size - 1) {
                             readingProgressLiveData.value = 0
                         }
@@ -84,11 +86,11 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
                 }
                 compositeDisposable.add(timerObservable.subscribe { onSkipButtonClick(1) })
             } else {
-                playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_black_24dp
+                playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_24dp
                 compositeDisposable.clear()
             }
         } ?: run {
-            playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_black_24dp
+            playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_24dp
             compositeDisposable.clear()
         }
     }
@@ -112,7 +114,7 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
     fun onSkipButtonClick(skipAmount: Int) {
         readingProgressLiveData.value?.let { readingProgress ->
             if (readingProgress + skipAmount >= 0) {
-                wordList?.let {
+                wordListLiveData.value?.let {
                     if (readingProgress + skipAmount <= it.size - 1) {
                         postValueToWordReadingProgress(readingProgress + skipAmount)
                     } else {
@@ -129,16 +131,15 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun isPlaying(): Boolean {
-        return playPauseButtonResIdLiveData.value != null && playPauseButtonResIdLiveData.value == R.drawable.ic_pause_black_24dp
+        return playPauseButtonResIdLiveData.value != null && playPauseButtonResIdLiveData.value == R.drawable.ic_pause_24dp
     }
 
     private fun postValueToWordReadingProgress(progress: Int) {
         maxProgressLiveData.value?.let { maxProgress ->
             if (progress <= maxProgress) {
                 readingProgressLiveData.value = progress
-                wordList?.let {
+                wordListLiveData.value?.let {
                     textToDisplayLiveData.value = it[progress]
-
                 }
             }
         }
@@ -146,13 +147,21 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
 
     @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     fun postClipboardData(clipboard: ClipboardManager, toast: Toast) {
-        if (clipboard.hasPrimaryClip() && clipboard.primaryClipDescription?.hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN) == true) {
-            wordList = mutableListOf(*clipboard.primaryClip?.getItemAt(0)?.text.toString().split(" ").toTypedArray())
-            wordList?.removeIf { it.trim().isEmpty() }
-            maxProgressLiveData.value = (wordList as ArrayList<String>).size - 1
-            buttonVisibilityLiveData.value = View.VISIBLE
-            postValueToWordReadingProgress(0)
-        } else {
+        clipboard.primaryClip?.getItemAt(0)?.let { clipDataItem ->
+            if (clipDataItem.text.toString().isNotEmpty() && clipDataItem.text.toString().isNotBlank()) {
+                readingTextLiveData.value = clipDataItem.text.toString()
+                val wordList = mutableListOf(*clipboard.primaryClip?.getItemAt(0)?.text.toString().split(" ").toTypedArray())
+                wordList.removeIf { it.trim().isEmpty() }
+                wordListLiveData.value = wordList
+                maxProgressLiveData.value = (wordList as ArrayList<String>).size - 1
+                buttonVisibilityLiveData.value = View.VISIBLE
+                postValueToWordReadingProgress(0)
+            } else {
+                buttonVisibilityLiveData.value = View.GONE
+                textToDisplayLiveData.value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
+                toast.show()
+            }
+        } ?: run {
             buttonVisibilityLiveData.value = View.GONE
             textToDisplayLiveData.value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
             toast.show()

@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/DarkTheme">
         <activity
-            android:name=".activity.ReadingActivity"
+            android:name=".activity.BlinkReaderActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
