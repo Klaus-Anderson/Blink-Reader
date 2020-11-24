@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.preference.PreferenceCategory
-        android:title="Category 1">
+    <PreferenceCategory
+        android:title="@string/reading_preference_category_title"
+        app:iconSpaceReserved="false">
 
-        <androidx.preference.SeekBarPreference
-            android:key="readingSpeed"
-            android:title="Reading Speed"
-            android:summary="Reading Speed SeekBar"
+        <SeekBarPreference
+            android:key="@string/reading_speed_preference_key"
+            android:title="@string/reading_speed_preference_title"
+            app:iconSpaceReserved="false"
+            android:summary="@string/reading_speed_preference_summary"
+            app:showSeekBarValue="true"
             android:defaultValue="120"
             android:max="1500"/>
 
-    </androidx.preference.PreferenceCategory>
+    </PreferenceCategory>
 
-</androidx.preference.PreferenceScreen>
+</PreferenceScreen>
