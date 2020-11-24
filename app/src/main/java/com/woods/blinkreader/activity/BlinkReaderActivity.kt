@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -35,13 +34,6 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
             setTheme(R.style.DarkTheme)
         }
         setContentView(R.layout.activity_blink_reader)
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val a = TypedValue()
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
     }
 
