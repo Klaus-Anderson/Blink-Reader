@@ -14,19 +14,27 @@ import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
 import com.woods.blinkreader.viewmodel.ReadingViewModel
 
-class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
+
+class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val readingViewModel: ReadingViewModel by viewModels()
 
     @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reading)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.registerOnSharedPreferenceChangeListener(this)
+
         setTitle(R.string.app_name)
-        if (prefs.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
-            readingViewModel.setWpm(prefs.getInt(getString(R.string.reading_speed_preference_key), 0))
+
+        // get and display preferences
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        if (sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
+            readingViewModel.setWpm(sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0))
         }
+        if (sharedPreferences.getBoolean(getString(R.string.dark_theme_preference_key), false)) {
+            setTheme(R.style.DarkTheme)
+        }
+        setContentView(R.layout.activity_blink_reader)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -49,6 +57,14 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (getString(R.string.reading_speed_preference_key) == key) {
             readingViewModel.setWpm(sharedPreferences.getInt(key, 120))
+        } else if (getString(R.string.dark_theme_preference_key) == key) {
+            setTheme(if (sharedPreferences.getBoolean(key, false)) {
+                R.style.DarkTheme
+            } else {
+                R.style.LightTheme
+            })
+            recreate()
         }
     }
+
 }

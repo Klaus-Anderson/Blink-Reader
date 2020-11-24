@@ -7,11 +7,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/DarkTheme">
+        android:supportsRtl="true">
         <activity
-            android:name=".activity.ReadingActivity"
-            android:label="@string/app_name">
+            android:name=".activity.BlinkReaderActivity"
+            android:label="@string/app_name"
+            android:theme="@style/LightTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

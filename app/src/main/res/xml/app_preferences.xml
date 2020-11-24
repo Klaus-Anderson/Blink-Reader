@@ -13,7 +13,21 @@
             android:summary="@string/reading_speed_preference_summary"
             app:showSeekBarValue="true"
             android:defaultValue="120"
-            android:max="1500"/>
+            android:max="1500" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/visual_preference_category_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:defaultValue="120"
+            android:key="@string/dark_theme_preference_key"
+            android:max="1500"
+            android:title="@string/dark_mode_preference_title"
+            app:iconSpaceReserved="false"
+            app:showSeekBarValue="true" />
 
     </PreferenceCategory>
 

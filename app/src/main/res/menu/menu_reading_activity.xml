@@ -1,12 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.woods.blinkreader.activity.ReadingActivity">
+    tools:context="com.woods.blinkreader.activity.BlinkReaderActivity">
 
     <item
         android:id="@+id/action_paste"
         android:icon="@drawable/ic_content_paste_24dp"
         android:title="@string/paste_icon_content_description"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -11,8 +11,11 @@
     <string name="reading_speed_preference_title">Reading Speed</string>
     <string name="reading_speed_preference_summary">Set the words per minute that the text will display at</string>
 
+    <string name="visual_preference_category_title">Visual Preferences</string>
+    <string name="dark_mode_preference_title">Dark Mode</string>
+
     <!--Preferences Keys-->
     <string name="reading_speed_preference_key">reading_speed_preference_key</string>
-
+    <string name="dark_theme_preference_key">dark_theme_preference_key</string>
 
 </resources>
