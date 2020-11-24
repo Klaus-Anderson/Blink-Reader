@@ -5,6 +5,6 @@
     <color name="color_accent">#D81B60</color>
     <color name="color_background_light">#FFFFFF</color>
     <color name="color_background_dark">#000000</color>
-    <color name="light_grey">#CCCCCC</color>
-    <color name="dark_grey">#333333</color>
+    <color name="light_grey">#999999</color>
+    <color name="dark_grey">#666666</color>
 </resources>

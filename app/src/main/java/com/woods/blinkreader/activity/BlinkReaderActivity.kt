@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -14,6 +15,7 @@ import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
 import com.woods.blinkreader.viewmodel.ReadingViewModel
 
+
 class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val readingViewModel: ReadingViewModel by viewModels()
 
@@ -21,15 +23,26 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_blink_reader)
         setTitle(R.string.app_name)
 
         // get and display preferences
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        prefs.registerOnSharedPreferenceChangeListener(this)
-        if (prefs.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
-            readingViewModel.setWpm(prefs.getInt(getString(R.string.reading_speed_preference_key), 0))
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        if (sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
+            readingViewModel.setWpm(sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0))
         }
+        if (sharedPreferences.getBoolean(getString(R.string.dark_theme_preference_key), false)) {
+            setTheme(R.style.DarkTheme)
+        }
+        setContentView(R.layout.activity_blink_reader)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val a = TypedValue()
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -52,6 +65,14 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (getString(R.string.reading_speed_preference_key) == key) {
             readingViewModel.setWpm(sharedPreferences.getInt(key, 120))
+        } else if (getString(R.string.dark_theme_preference_key) == key) {
+            setTheme(if (sharedPreferences.getBoolean(key, false)) {
+                R.style.DarkTheme
+            } else {
+                R.style.LightTheme
+            })
+            recreate()
         }
     }
+
 }
