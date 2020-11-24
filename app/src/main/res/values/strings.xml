@@ -4,5 +4,15 @@
     <string name="action_settings">Settings</string>
     <string name="paste_icon_content_description">Paste Content to read</string>
     <string name="paste_error">Could not paste content</string>
-    <string name="copy_text_instructions">Copy text to your clipboard, then click on the paste icon on App Bar to speed read it!</string>
+    <string name="copy_text_instructions">Copy text to your clipboard, then click the paste icon on the App Bar to speed read it!</string>
+
+    <!--Preferences Strings-->
+    <string name="reading_preference_category_title">Reading Preferences</string>
+    <string name="reading_speed_preference_title">Reading Speed</string>
+    <string name="reading_speed_preference_summary">Set the words per minute that the text will display at</string>
+
+    <!--Preferences Keys-->
+    <string name="reading_speed_preference_key">reading_speed_preference_key</string>
+
+
 </resources>

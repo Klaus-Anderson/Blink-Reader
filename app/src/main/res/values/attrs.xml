@@ -2,4 +2,5 @@
 <resources>
     <attr name="textColor" format="color"/>
     <attr name="darkTextColor" format="color"/>
+    <attr name="greyTextColor" format="color"/>
 </resources>

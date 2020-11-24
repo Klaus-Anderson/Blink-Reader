@@ -5,30 +5,28 @@ import android.content.ClipboardManager
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
-import com.woods.blinkreader.fragment.PreferencesFragment
 import com.woods.blinkreader.viewmodel.ReadingViewModel
 
 class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
-    private var readingViewModel: ReadingViewModel? = null
-    private val readingSpeedString = "readingSpeed"
+    private val readingViewModel: ReadingViewModel by viewModels()
 
     @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reading)
-        readingViewModel = ViewModelProviders.of(this)
-                .get(ReadingViewModel::class.java)
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         prefs.registerOnSharedPreferenceChangeListener(this)
         setTitle(R.string.app_name)
-        readingViewModel!!.postClipboardData((getSystemService(CLIPBOARD_SERVICE) as ClipboardManager), Toast.makeText(this, R.string.paste_error, Toast.LENGTH_SHORT))
+        if (prefs.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
+            readingViewModel.setWpm(prefs.getInt(getString(R.string.reading_speed_preference_key), 0))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -41,25 +39,16 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 //        switch (item.getItemId()) {
         if (R.id.action_paste == item.itemId) {
-            readingViewModel!!.postClipboardData((getSystemService(CLIPBOARD_SERVICE) as ClipboardManager), Toast.makeText(this, R.string.paste_error, Toast.LENGTH_SHORT))
+            readingViewModel.postClipboardData((getSystemService(CLIPBOARD_SERVICE) as ClipboardManager),
+                    Toast.makeText(this, R.string.paste_error, Toast.LENGTH_SHORT))
             //                break;
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed() {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        if (fragmentManager.findFragmentByTag(PreferencesFragment.TAG) != null) {
-            fragmentTransaction.remove(fragmentManager.findFragmentByTag(PreferencesFragment.TAG)!!).commit()
-        } else {
-            super.onBackPressed()
-        }
-    }
-
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (readingSpeedString == key) {
-            readingViewModel!!.setWpm(sharedPreferences.getInt(key, 120))
+        if (getString(R.string.reading_speed_preference_key) == key) {
+            readingViewModel.setWpm(sharedPreferences.getInt(key, 120))
         }
     }
 }

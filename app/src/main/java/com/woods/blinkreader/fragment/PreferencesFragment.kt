@@ -11,6 +11,6 @@ class PreferencesFragment : PreferenceFragmentCompat() {
 
     companion object {
         @JvmField
-        val TAG = PreferencesFragment::class.java.name
+        val TAG: String = PreferencesFragment::class.java.name
     }
 }

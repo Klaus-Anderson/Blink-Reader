@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{readingViewModel.textToDisplayLiveData}"
-            android:textColor="@color/color_primary_light"
+            android:textColor="?attr/colorPrimaryDark"
             android:textSize="@dimen/text_size"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,10 +42,12 @@
 
             <ImageView
                 android:id="@+id/replay_30_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(-30)}"
                 android:src="@drawable/ic_replay_30_black_24dp"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
                 app:layout_constraintEnd_toStartOf="@+id/replay_10_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -53,9 +55,11 @@
 
             <ImageView
                 android:id="@+id/replay_10_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(-10)}"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_replay_10_black_24dp"
                 app:layout_constraintEnd_toStartOf="@+id/replay_5_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -64,9 +68,11 @@
 
             <ImageView
                 android:id="@+id/replay_5_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(-5)}"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_replay_5_black_24dp"
                 app:layout_constraintEnd_toStartOf="@+id/replay_1_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -75,9 +81,11 @@
 
             <ImageView
                 android:id="@+id/replay_1_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(-1)}"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_replay_black_24dp"
                 app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -86,10 +94,12 @@
 
             <ImageView
                 android:id="@+id/playPauseButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{readingViewModel.onPlayPauseButtonClickListener()}"
-                android:src="@{readingViewModel.getPlayPauseButtonResIdLiveData().getValue() == 0 ? @drawable/ic_play_arrow_black_24dp : ContextCompat.getDrawable(context,readingViewModel.getPlayPauseButtonResIdLiveData().getValue())}"
+                android:scaleType="fitCenter"
+                android:src="@{readingViewModel.getPlayPauseButtonResIdLiveData() == 0 ? @drawable/ic_play_arrow_black_24dp : ContextCompat.getDrawable(context,readingViewModel.getPlayPauseButtonResIdLiveData())}"
                 app:layout_constraintEnd_toStartOf="@+id/forward_5_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/replay_1_button"
@@ -97,9 +107,11 @@
 
             <ImageView
                 android:id="@+id/forward_5_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(5)}"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_forward_5_black_24dp"
                 app:layout_constraintEnd_toStartOf="@+id/forward_10_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -108,9 +120,11 @@
 
             <ImageView
                 android:id="@+id/forward_10_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(10)}"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_forward_10_black_24dp"
                 app:layout_constraintEnd_toStartOf="@+id/forward_30_button"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -119,14 +133,17 @@
 
             <ImageView
                 android:id="@+id/forward_30_button"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:onClick="@{() -> readingViewModel.onSkipButtonClick(30)}"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_forward_30_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/forward_10_button"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <SeekBar
@@ -134,15 +151,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:max="@{readingViewModel.maxProgressLiveData}"
-            android:min="1"
-            android:maxHeight="6dp"
+            android:maxHeight="12dp"
             android:minHeight="6dp"
-            android:onProgressChanged="@{readingViewModel.onProgressChanged}"
-            android:paddingLeft="30dp"
-            android:paddingTop="10dp"
-            android:paddingRight="30dp"
-            android:paddingBottom="10dp"
+            android:onProgressChanged="@{readingViewModel.onProgressChanged()}"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
             android:progress="@{readingViewModel.readingProgressLiveData}"
+            app:layout_constraintTop_toBottomOf="@id/button_constraint_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
