@@ -74,7 +74,7 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
     private fun togglePlay() {
         getTimerObservable()?.let { timerObservable ->
             if (!isPlaying()) {
-                playPauseButtonResIdLiveData.value = R.drawable.ic_pause_black_24dp
+                playPauseButtonResIdLiveData.value = R.drawable.ic_pause_24dp
                 readingProgressLiveData.value?.let { readingProgress ->
                     wordList?.let {
                         if (readingProgress == it.size - 1) {
@@ -84,11 +84,11 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
                 }
                 compositeDisposable.add(timerObservable.subscribe { onSkipButtonClick(1) })
             } else {
-                playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_black_24dp
+                playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_24dp
                 compositeDisposable.clear()
             }
         } ?: run {
-            playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_black_24dp
+            playPauseButtonResIdLiveData.value = R.drawable.ic_play_arrow_24dp
             compositeDisposable.clear()
         }
     }
@@ -129,7 +129,7 @@ class ReadingViewModel(application: Application) : AndroidViewModel(application)
     }
 
     private fun isPlaying(): Boolean {
-        return playPauseButtonResIdLiveData.value != null && playPauseButtonResIdLiveData.value == R.drawable.ic_pause_black_24dp
+        return playPauseButtonResIdLiveData.value != null && playPauseButtonResIdLiveData.value == R.drawable.ic_pause_24dp
     }
 
     private fun postValueToWordReadingProgress(progress: Int) {
