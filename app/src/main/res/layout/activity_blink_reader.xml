@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/reading_fragment"
-        class="com.woods.blinkreader.fragment.ReadingFragment"
+        android:name="com.woods.blinkreader.fragment.ReadingFragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/preferences_fragment"
@@ -14,9 +14,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/preferences_fragment"
-        class="com.woods.blinkreader.fragment.PreferencesFragment"
+        android:name="com.woods.blinkreader.fragment.PreferencesFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

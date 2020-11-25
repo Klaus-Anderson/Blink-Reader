@@ -4,11 +4,11 @@
     <style name="BaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/color_accent</item>
-        <item name="android:actionBarStyle">@style/BaseTheme.ActionBarStyle</item>
-        <item name="android:textColorPrimary">?attr/textColor</item>
+        <item name="titleTextColor">?attr/darkTextColor</item>
+        <item name="android:textColorPrimary">?attr/darkTextColor</item>
         <item name="android:textColorSecondary">?attr/greyTextColor</item>
         <item name="android:textAppearanceSmall">@style/textAppearanceSmall</item>
-        <item name="android:windowBackground">?attr/darkTextColor</item>
+        <item name="android:windowBackground">?attr/textColor</item>
 
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">?attr/greyTextColor</item>
@@ -17,17 +17,9 @@
         <item name="android:colorForeground">?attr/lightGreyTextColor</item>
     </style>
 
-    <style name="BaseTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:titleTextStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
-    </style>
-
-    <style name="MyTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">?attr/textColor</item>
-    </style>
-
     <style name="LightTheme" parent="BaseTheme">
-        <item name="colorPrimaryDark">@color/color_primary_dark</item>
-        <item name="colorPrimary">@color/color_primary_light</item>
+        <item name="colorPrimary">@color/color_primary_dark</item>
+        <item name="colorPrimaryDark">@color/color_primary_light</item>
         <item name="textColor">@android:color/black</item>
         <item name="darkTextColor">@android:color/white</item>
         <item name="greyTextColor">@color/dark_grey</item>
@@ -35,8 +27,8 @@
     </style>
 
     <style name="DarkTheme" parent="BaseTheme">
-        <item name="colorPrimaryDark">@color/color_primary_light</item>
-        <item name="colorPrimary">@color/color_primary_dark</item>
+        <item name="colorPrimary">@color/color_primary_light</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="textColor">@android:color/white</item>
         <item name="darkTextColor">@android:color/black</item>
         <item name="greyTextColor">@color/light_grey</item>
