@@ -4,9 +4,14 @@
     tools:context="com.woods.blinkreader.activity.BlinkReaderActivity">
 
     <item
-        android:id="@+id/action_paste"
-        android:icon="@drawable/ic_content_paste_24dp"
+        android:id="@+id/action_reader_switch"
+        android:icon="@drawable/ic_content_book_24dp"
         android:title="@string/paste_icon_content_description"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_paste"
+        android:icon="@drawable/ic_content_paste_24dp"
+        android:title="@string/switch_reading_icon_content_description"
+        app:showAsAction="always" />
 
 </menu>
