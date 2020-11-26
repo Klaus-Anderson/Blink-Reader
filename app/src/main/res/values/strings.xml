@@ -9,7 +9,7 @@
     <!--Preferences Strings-->
     <string name="reading_preference_category_title">Reading Preferences</string>
     <string name="reading_speed_preference_title">Reading Speed</string>
-    <string name="reading_speed_preference_summary">Set the words per minute that the text will display at</string>
+    <string name="reading_speed_preference_summary">Set the words per minute at which the Blink Reader will display (values less than 15 are treated as 15)</string>
 
     <string name="visual_preference_category_title">Visual Preferences</string>
     <string name="dark_mode_preference_title">Dark Mode</string>

@@ -56,7 +56,11 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         if (getString(R.string.reading_speed_preference_key) == key) {
-            blinkReaderViewModel.setWpm(sharedPreferences.getInt(key, 120))
+            if (sharedPreferences.getInt(key, 120) < 15) {
+                sharedPreferences.edit().putInt(key, 15).apply()
+            } else {
+                blinkReaderViewModel.setWpm(sharedPreferences.getInt(key, 120))
+            }
         } else if (getString(R.string.dark_theme_preference_key) == key) {
             setTheme(if (sharedPreferences.getBoolean(key, false)) {
                 R.style.DarkTheme

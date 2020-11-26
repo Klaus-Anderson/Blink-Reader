@@ -7,13 +7,14 @@
         app:iconSpaceReserved="false">
 
         <SeekBarPreference
+            android:defaultValue="120"
             android:key="@string/reading_speed_preference_key"
+            android:max="750"
+            android:summary="@string/reading_speed_preference_summary"
             android:title="@string/reading_speed_preference_title"
             app:iconSpaceReserved="false"
-            android:summary="@string/reading_speed_preference_summary"
             app:showSeekBarValue="true"
-            android:defaultValue="120"
-            android:max="1500" />
+            app:updatesContinuously="true" />
 
     </PreferenceCategory>
 
@@ -22,9 +23,8 @@
         app:iconSpaceReserved="false">
 
         <SwitchPreference
-            android:defaultValue="120"
+            android:defaultValue="false"
             android:key="@string/dark_theme_preference_key"
-            android:max="1500"
             android:title="@string/dark_mode_preference_title"
             app:iconSpaceReserved="false"
             app:showSeekBarValue="true" />
