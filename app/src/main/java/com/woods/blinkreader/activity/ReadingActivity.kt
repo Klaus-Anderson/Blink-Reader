@@ -14,13 +14,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
-import com.woods.blinkreader.databinding.ActivityBlinkReaderBinding
+import com.woods.blinkreader.databinding.ActivityReadingBinding
 import com.woods.blinkreader.fragment.BlinkFragment
 import com.woods.blinkreader.fragment.BookFragment
 import com.woods.blinkreader.viewmodel.BlinkReaderViewModel
 
 
-class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
+class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val blinkReaderViewModel: BlinkReaderViewModel by viewModels()
 
     @SuppressLint("ShowToast")
@@ -69,8 +69,8 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
             }
         })
 
-        val activityBlinkReaderBinding: ActivityBlinkReaderBinding = DataBindingUtil.setContentView(this, R.layout.activity_blink_reader)
-        activityBlinkReaderBinding.readingViewModel = blinkReaderViewModel
+        val activityReadingBinding: ActivityReadingBinding = DataBindingUtil.setContentView(this, R.layout.activity_reading)
+        activityReadingBinding.readingViewModel = blinkReaderViewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
