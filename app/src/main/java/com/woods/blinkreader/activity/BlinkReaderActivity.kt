@@ -41,7 +41,9 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
 
         blinkReaderViewModel.blinkVisibilityLiveData.observe(this, { visibility ->
             if (visibility == View.VISIBLE) {
-                supportFragmentManager.beginTransaction()
+                supportFragmentManager.fragments.firstOrNull {
+                    it is BlinkFragment
+                } ?: supportFragmentManager.beginTransaction()
                         .add(R.id.reading_fragment_layout, BlinkFragment()).commit()
             } else if (visibility == View.GONE) {
                 supportFragmentManager.fragments.forEach {
@@ -54,7 +56,9 @@ class BlinkReaderActivity : AppCompatActivity(), OnSharedPreferenceChangeListene
 
         blinkReaderViewModel.bookVisibilityLiveData.observe(this, { visibility ->
             if (visibility == View.VISIBLE) {
-                supportFragmentManager.beginTransaction()
+                supportFragmentManager.fragments.firstOrNull {
+                    it is BookFragment
+                } ?: supportFragmentManager.beginTransaction()
                         .add(R.id.reading_fragment_layout, BookFragment()).commit()
             } else if (visibility == View.GONE) {
                 supportFragmentManager.fragments.forEach {
