@@ -40,7 +40,6 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
         (wpmLiveData as MutableLiveData).value = wpm.toDouble()
         if (isPlaying()) {
             getTimerObservable()?.let {
-                // @todo move to disposable to trigger speed change at the correct moment
                 compositeDisposable.clear()
                 compositeDisposable.add(it.subscribe { onSkipButtonClick(1) })
             }

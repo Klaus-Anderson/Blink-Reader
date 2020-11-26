@@ -5,8 +5,8 @@
     tools:context=".fragment.BlinkFragment">
 
     <data>
-
         <import type="androidx.core.content.ContextCompat" />
+        <import type="com.woods.blinkreader.R" />
 
         <variable
             name="readingViewModel"
@@ -37,6 +37,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/replay_10_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
+                android:contentDescription="@string/replay_30_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -50,6 +51,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/replay_5_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/replay_30_button"
+                android:contentDescription="@string/replay_10_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -63,6 +65,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/replay_1_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/replay_10_button"
+                android:contentDescription="@string/replay_5_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -76,6 +79,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/replay_5_button"
+                android:contentDescription="@string/replay_1_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -89,6 +93,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/forward_5_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/replay_1_button"
+                android:contentDescription="@{readingViewModel.getPlayPauseButtonResIdLiveData() == R.drawable.ic_pause_24dp ? @string/pause_content_description : @string/play_content_description}"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -102,6 +107,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/forward_10_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/playPauseButton"
+                android:contentDescription="@string/ff_5_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -115,6 +121,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/forward_30_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/forward_5_button"
+                android:contentDescription="@string/ff_10_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
@@ -128,10 +135,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/forward_10_button"
+                android:contentDescription="@string/ff_30_content_description"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!--suppress AndroidUnknownAttribute -->
         <SeekBar
             android:id="@+id/reading_seekbar"
             android:layout_width="0dp"

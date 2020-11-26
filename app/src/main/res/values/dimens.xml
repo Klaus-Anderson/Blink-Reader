@@ -1,7 +1,3 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="gutter_margin">10dp</dimen>
-    <dimen name="center_text_margin">40dp</dimen>
     <dimen name="text_size">36sp</dimen>
-
 </resources>

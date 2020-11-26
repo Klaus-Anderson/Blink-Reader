@@ -1,11 +1,21 @@
 <resources>
     <string name="app_name">BlinkReader</string>
-    <string name="title_activity_reading_activty">ReadingActivity</string>
-    <string name="action_settings">Settings</string>
     <string name="paste_icon_content_description">Paste Content to read</string>
     <string name="switch_reading_icon_content_description">Change reading view</string>
     <string name="paste_error">Could not paste content</string>
     <string name="copy_text_instructions">Copy text to your clipboard, then click the paste icon on the App Bar to speed read it!</string>
+
+    <!-- Seekbar accessibility String -->
+    <string name="replay_30_content_description">Rewind the reader 30 words</string>
+    <string name="replay_10_content_description">Rewind the reader 10 words</string>
+    <string name="replay_5_content_description">Rewind the reader 5 words</string>
+    <string name="replay_1_content_description">Rewind the reader 1 word</string>
+    <string name="play_content_description">Play the reader</string>
+    <string name="pause_content_description">Pause the reader</string>
+    <string name="ff_5_content_description">Fast-forward the reader 5 words</string>
+    <string name="ff_10_content_description">Fast-forward the reader 10 words</string>
+    <string name="ff_30_content_description">Fast-forward the reader 30 words</string>
+
 
     <!--Preferences Strings-->
     <string name="reading_preference_category_title">Reading Preferences</string>
