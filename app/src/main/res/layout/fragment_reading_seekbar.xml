@@ -2,13 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.ReadingFragment">
+    tools:context=".fragment.BlinkFragment">
 
     <data>
+
         <import type="androidx.core.content.ContextCompat" />
-        <variable
-            name="context"
-            type="android.content.Context" />
+
         <variable
             name="readingViewModel"
             type="com.woods.blinkreader.viewmodel.BlinkReaderViewModel" />
@@ -18,19 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/reading_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{readingViewModel.textToDisplayLiveData}"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="@dimen/text_size"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="text" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/button_constraint_layout"
             android:layout_width="match_parent"
@@ -38,16 +24,16 @@
             app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reading_textview">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/replay_30_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> readingViewModel.onSkipButtonClick(-30)}"
-                android:src="@drawable/ic_replay_30_24dp"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(-30)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_replay_30_24dp"
                 app:layout_constraintEnd_toStartOf="@+id/replay_10_button"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -150,19 +136,19 @@
             android:id="@+id/reading_seekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:max="@{readingViewModel.maxProgressLiveData}"
-            android:maxHeight="12dp"
-            android:minHeight="6dp"
-            android:onProgressChanged="@{readingViewModel.onProgressChanged()}"
             android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="10dp"
+            android:max="@{readingViewModel.maxProgressLiveData}"
+            android:maxHeight="12dp"
+            android:minHeight="6dp"
+            android:onProgressChanged="@{readingViewModel.onProgressChanged()}"
             android:progress="@{readingViewModel.readingProgressLiveData}"
-            app:layout_constraintTop_toBottomOf="@id/button_constraint_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_constraint_layout" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/buttons_group"

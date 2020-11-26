@@ -16,20 +16,23 @@ import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 
 class BlinkReaderViewModel(application: Application) : AndroidViewModel(application) {
-    val textToDisplayLiveData: LiveData<String> = MutableLiveData()
+    val blinkTextLiveData: LiveData<String> = MutableLiveData()
     val readingProgressLiveData: LiveData<Int?> = MutableLiveData()
     val maxProgressLiveData: LiveData<Int?> = MutableLiveData()
     val playPauseButtonResIdLiveData: LiveData<Int?> = MutableLiveData()
     val buttonVisibilityLiveData: LiveData<Int> = MutableLiveData()
+    val blinkVisibilityLiveData: LiveData<Int> = MutableLiveData()
+    val bookVisibilityLiveData: LiveData<Int> = MutableLiveData()
+    val bookTextLiveData: LiveData<String> = MutableLiveData()
 
     // text that is currently being read
-    private var readingTextLiveData: LiveData<String> = MutableLiveData()
-    private var wordListLiveData: LiveData<List<String>> = MutableLiveData()
+    private val wordListLiveData: LiveData<List<String>> = MutableLiveData()
     private val wpmLiveData: LiveData<Double?> = MutableLiveData()
     private val compositeDisposable = CompositeDisposable()
 
     init {
-        (textToDisplayLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
+        (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
+        (bookTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
         (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
     }
 
@@ -124,7 +127,7 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
             if (progress <= maxProgress) {
                 (readingProgressLiveData as MutableLiveData).value = progress
                 wordListLiveData.value?.let {
-                    (textToDisplayLiveData as MutableLiveData).value = it[progress]
+                    (blinkTextLiveData as MutableLiveData).value = it[progress]
                 }
             }
         }
@@ -134,7 +137,7 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
     fun postClipboardData(clipboard: ClipboardManager, toast: Toast) {
         clipboard.primaryClip?.getItemAt(0)?.let { clipDataItem ->
             if (clipDataItem.text.toString().isNotEmpty() && clipDataItem.text.toString().isNotBlank()) {
-                (readingTextLiveData as MutableLiveData).value = clipDataItem.text.toString()
+                (bookTextLiveData as MutableLiveData).value = clipDataItem.text.toString()
                 val wordList = clipDataItem.text.toString().split(" ").toMutableList()
                 wordList.removeIf { it.trim().isEmpty() }
                 (wordListLiveData as MutableLiveData).value = wordList
@@ -143,13 +146,23 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
                 postValueToWordReadingProgress(0)
             } else {
                 (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
-                (textToDisplayLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
+                (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
                 toast.show()
             }
         } ?: run {
             (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
-            (textToDisplayLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
+            (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
             toast.show()
+        }
+    }
+
+    fun switchReadingView(readingPreferenceValue: String) {
+        if (readingPreferenceValue == getApplication<Application>().baseContext.getString(R.string.reading_mode_book_preference_value)) {
+            (blinkVisibilityLiveData as MutableLiveData).value = View.GONE
+            (bookVisibilityLiveData as MutableLiveData).value = View.VISIBLE
+        } else {
+            (blinkVisibilityLiveData as MutableLiveData).value = View.VISIBLE
+            (bookVisibilityLiveData as MutableLiveData).value = View.GONE
         }
     }
 }

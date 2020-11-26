@@ -3,6 +3,7 @@
     <string name="title_activity_reading_activty">ReadingActivity</string>
     <string name="action_settings">Settings</string>
     <string name="paste_icon_content_description">Paste Content to read</string>
+    <string name="switch_reading_icon_content_description">Change reading view</string>
     <string name="paste_error">Could not paste content</string>
     <string name="copy_text_instructions">Copy text to your clipboard, then click the paste icon on the App Bar to speed read it!</string>
 
@@ -17,5 +18,8 @@
     <!--Preferences Keys-->
     <string name="reading_speed_preference_key">reading_speed_preference_key</string>
     <string name="dark_theme_preference_key">dark_theme_preference_key</string>
+    <string name="reading_mode_preference_key">reading_mode_preference_key</string>
+    <string name="reading_mode_blink_preference_value">reading_mode_blink_preference_value</string>
+    <string name="reading_mode_book_preference_value">reading_mode_book_preference_value</string>
 
 </resources>
