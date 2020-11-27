@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BlinkReader</string>
+    <string name="app_name">Blink Reader</string>
     <string name="paste_icon_content_description">Paste Content to read</string>
     <string name="switch_reading_icon_content_description">Change reading view</string>
     <string name="paste_error">Could not paste content</string>
