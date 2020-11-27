@@ -39,6 +39,7 @@
             android:name="com.woods.blinkreader.fragment.PreferencesFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintWidth_percent=".25"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/reading_fragment_layout"

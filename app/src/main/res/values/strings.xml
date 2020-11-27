@@ -3,7 +3,8 @@
     <string name="paste_icon_content_description">Paste Content to read</string>
     <string name="switch_reading_icon_content_description">Change reading view</string>
     <string name="paste_error">Could not paste content</string>
-    <string name="copy_text_instructions">Copy text to your clipboard, then click the paste icon on the App Bar to speed read it!</string>
+    <string name="copy_text_instructions">Copy text to your clipboard, then click the paste icon on
+        the App Bar to speed read it!</string>
 
     <!-- Seekbar accessibility String -->
     <string name="replay_30_content_description">Rewind the reader 30 words</string>
@@ -16,11 +17,11 @@
     <string name="ff_10_content_description">Fast-forward the reader 10 words</string>
     <string name="ff_30_content_description">Fast-forward the reader 30 words</string>
 
-
     <!--Preferences Strings-->
     <string name="reading_preference_category_title">Reading Preferences</string>
     <string name="reading_speed_preference_title">Reading Speed</string>
-    <string name="reading_speed_preference_summary">Set the words per minute at which the Blink Reader will display (values less than 15 are treated as 15)</string>
+    <string name="reading_speed_preference_summary">Set the words per minute at which the Blink Reader
+        will display (values less than 15 are treated as 15)</string>
 
     <string name="visual_preference_category_title">Visual Preferences</string>
     <string name="dark_mode_preference_title">Dark Mode</string>
