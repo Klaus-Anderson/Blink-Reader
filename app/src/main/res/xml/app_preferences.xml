@@ -26,8 +26,15 @@
             android:defaultValue="false"
             android:key="@string/dark_theme_preference_key"
             android:title="@string/dark_mode_preference_title"
-            app:iconSpaceReserved="false"
-            app:showSeekBarValue="true" />
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="@string/raleway_font_value"
+            android:entries="@array/reading_font_preference_labels"
+            android:entryValues="@array/reading_font_preference_values"
+            android:key="@string/reading_font_preference_key"
+            android:title="@string/reading_font_preference_title"
+            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 

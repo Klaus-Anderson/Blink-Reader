@@ -11,6 +11,7 @@ import com.woods.blinkreader.R
 import com.woods.blinkreader.databinding.FragmentReadingSeekbarBindingImpl
 import com.woods.blinkreader.viewmodel.BlinkReaderViewModel
 
+@Suppress("unused")
 class ReadingSeekbarFragment : Fragment() {
     private val blinkReaderViewModel: BlinkReaderViewModel by activityViewModels()
 

@@ -2,9 +2,13 @@ package com.woods.blinkreader.viewmodel
 
 import android.app.Application
 import android.content.ClipboardManager
+import android.graphics.Typeface
+import android.text.Html
+import android.text.Spanned
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.databinding.adapters.SeekBarBindingAdapter.OnProgressChanged
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -14,37 +18,46 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToLong
 
 class BlinkReaderViewModel(application: Application) : AndroidViewModel(application) {
     val blinkTextLiveData: LiveData<String> = MutableLiveData()
     val readingProgressLiveData: LiveData<Int?> = MutableLiveData()
+    val scrollToPercentageLiveData: LiveData<Double> = MutableLiveData()
     val maxProgressLiveData: LiveData<Int?> = MutableLiveData()
     val playPauseButtonResIdLiveData: LiveData<Int?> = MutableLiveData()
     val buttonVisibilityLiveData: LiveData<Int> = MutableLiveData()
     val blinkVisibilityLiveData: LiveData<Int> = MutableLiveData()
     val bookVisibilityLiveData: LiveData<Int> = MutableLiveData()
-    val bookTextLiveData: LiveData<String> = MutableLiveData()
+    val bookTextLiveData: LiveData<Spanned> = MutableLiveData()
+    private val copiedTextLiveData: LiveData<String> = MutableLiveData()
+    val readingFontLiveData: LiveData<Typeface> = MutableLiveData()
 
     // text that is currently being read
     private val wordListLiveData: LiveData<List<String>> = MutableLiveData()
-    private val wpmLiveData: LiveData<Double?> = MutableLiveData()
     private val compositeDisposable = CompositeDisposable()
+
+    private var wordsPerMinuteDouble = 0.0
+    private var accentColorString = "#000000"
 
     init {
         (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
-        (bookTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
+        (bookTextLiveData as MutableLiveData).value = Html.fromHtml(getApplication<Application>().baseContext.getString(R.string.copy_text_instructions), HtmlCompat.FROM_HTML_MODE_LEGACY)
         (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
     }
 
     fun setWpm(wpm: Int) {
-        (wpmLiveData as MutableLiveData).value = wpm.toDouble()
+        wordsPerMinuteDouble = wpm.toDouble()
         if (isPlaying()) {
             getTimerObservable()?.let {
-                // @todo move to disposable to trigger speed change at the correct moment
                 compositeDisposable.clear()
                 compositeDisposable.add(it.subscribe { onSkipButtonClick(1) })
             }
         }
+    }
+
+    fun setAccentColor(accentColorString: String) {
+        this.accentColorString = accentColorString
     }
 
     override fun onCleared() {
@@ -68,6 +81,7 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
                     wordListLiveData.value?.let {
                         if (readingProgress == it.size - 1) {
                             (readingProgressLiveData as MutableLiveData).value = 0
+                            (scrollToPercentageLiveData as MutableLiveData).value = 0.0
                         }
                     }
                 }
@@ -83,7 +97,7 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun getTimerObservable(): Observable<Boolean>? {
-        return (wpmLiveData as MutableLiveData).value?.let {
+        return wordsPerMinuteDouble.let {
             Observable.interval(
                     (60 / it * 1000).toLong(), TimeUnit.MILLISECONDS)
                     .timeInterval()
@@ -126,9 +140,39 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
         (maxProgressLiveData as MutableLiveData).value?.let { maxProgress ->
             if (progress <= maxProgress) {
                 (readingProgressLiveData as MutableLiveData).value = progress
+
                 wordListLiveData.value?.let {
                     (blinkTextLiveData as MutableLiveData).value = it[progress]
                 }
+
+                val progressPercentage = progress.toFloat().div(maxProgress)
+                val scrollToPercentage =
+                        .1 * ((when {
+                            progressPercentage <= .1 -> {
+                                0.0
+                            }
+                            progressPercentage > .9 -> {
+                                1.0
+                            }
+                            else -> {
+                                (progressPercentage - .1) / .8
+                            }
+                        } * 100) / 10).roundToLong()
+                (scrollToPercentageLiveData as MutableLiveData).value = scrollToPercentage
+
+                var bookText = ""
+                readingProgressLiveData.value?.let { readingProgress ->
+                    wordListLiveData.value?.let {
+                        it.forEachIndexed { index, element ->
+                            bookText += if (readingProgress == index) {
+                                "<span style='background:$accentColorString'>$element</span> "
+                            } else
+                                "$element "
+                        }
+                    }
+                }
+                (bookTextLiveData as MutableLiveData).value =
+                        Html.fromHtml(bookText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }
     }
@@ -137,8 +181,8 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
     fun postClipboardData(clipboard: ClipboardManager, toast: Toast) {
         clipboard.primaryClip?.getItemAt(0)?.let { clipDataItem ->
             if (clipDataItem.text.toString().isNotEmpty() && clipDataItem.text.toString().isNotBlank()) {
-                (bookTextLiveData as MutableLiveData).value = clipDataItem.text.toString()
-                val wordList = clipDataItem.text.toString().split(" ").toMutableList()
+                (copiedTextLiveData as MutableLiveData).value = clipDataItem.text.toString()
+                val wordList = clipDataItem.text.toString().split(" ", "\n", "\r", "\\s").toMutableList()
                 wordList.removeIf { it.trim().isEmpty() }
                 (wordListLiveData as MutableLiveData).value = wordList
                 (maxProgressLiveData as MutableLiveData).value = (wordList as ArrayList<String>).size - 1
@@ -164,5 +208,20 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
             (blinkVisibilityLiveData as MutableLiveData).value = View.VISIBLE
             (bookVisibilityLiveData as MutableLiveData).value = View.GONE
         }
+    }
+
+    fun setFont(string: String) {
+        when (string) {
+            getApplication<Application>().baseContext.getString(R.string.roboto_mono_font_value) -> {
+                (readingFontLiveData as MutableLiveData).value = getApplication<Application>().baseContext.resources.getFont(R.font.roboto_mono)
+            }
+            getApplication<Application>().baseContext.getString(R.string.bitter_font_value) -> {
+                (readingFontLiveData as MutableLiveData).value = getApplication<Application>().baseContext.resources.getFont(R.font.bitter)
+            }
+            else -> {
+                (readingFontLiveData as MutableLiveData).value = getApplication<Application>().baseContext.resources.getFont(R.font.raleway)
+            }
+        }
+
     }
 }

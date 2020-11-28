@@ -5,7 +5,6 @@
     tools:context=".fragment.BlinkFragment">
 
     <data>
-
         <variable
             name="readingViewModel"
             type="com.woods.blinkreader.viewmodel.BlinkReaderViewModel" />
@@ -20,14 +19,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{readingViewModel.blinkTextLiveData}"
-            android:textColor="?attr/colorPrimary"
+            android:textColor="?attr/negativeTextColor"
             android:textSize="@dimen/text_size"
             android:gravity="center"
+            android:typeface="@{readingViewModel.readingFontLiveData}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="text" />
+            tools:text="text"
+            tools:textColor="@color/color_primary_dark" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

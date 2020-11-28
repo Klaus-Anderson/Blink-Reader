@@ -35,10 +35,6 @@
         <item name="lightGreyTextColor">@color/dark_grey</item>
     </style>
 
-    <style name="textAppearanceLarge" parent="@android:style/TextAppearance.Large">
-        <item name="android:textColor">?attr/backgroundColor</item>
-    </style>
-
     <style name="textAppearanceSmall" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">?attr/greyTextColor</item>
     </style>
