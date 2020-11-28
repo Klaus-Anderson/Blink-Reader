@@ -12,6 +12,7 @@
     </data>
 
     <ScrollView
+        android:id="@+id/book_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,7 +26,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:text="@{readingViewModel.bookTextLiveData}"
-                android:textColor="?attr/colorPrimary"
+                android:textColor="?attr/negativeTextColor"
+                android:typeface="@{readingViewModel.readingFontLiveData}"
                 android:textSize="@dimen/text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

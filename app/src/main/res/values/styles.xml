@@ -9,7 +9,6 @@
         <item name="android:textColorSecondary">?attr/greyTextColor</item>
         <item name="android:textAppearanceSmall">@style/textAppearanceSmall</item>
         <item name="android:windowBackground">?attr/backgroundColor</item>
-        <item name="android:font"></item>
 
         <!-- inactive thumb color -->
         <item name="colorSwitchThumbNormal">?attr/greyTextColor</item>

@@ -25,12 +25,22 @@
 
     <string name="visual_preference_category_title">Visual Preferences</string>
     <string name="dark_mode_preference_title">Dark Mode</string>
+    <string name="reading_font_preference_title">Reading Font</string>
 
     <!--Preferences Keys-->
     <string name="reading_speed_preference_key">reading_speed_preference_key</string>
     <string name="dark_theme_preference_key">dark_theme_preference_key</string>
+    <string name="reading_font_preference_key">reading_font_preference_key</string>
     <string name="reading_mode_preference_key">reading_mode_preference_key</string>
     <string name="reading_mode_blink_preference_value">reading_mode_blink_preference_value</string>
     <string name="reading_mode_book_preference_value">reading_mode_book_preference_value</string>
+
+    <!--Fonts -->
+    <string name="bitter_font_label">Bitter</string>
+    <string name="raleway_font_label">Raleway</string>
+    <string name="roboto_mono_font_label">Roboto Mono</string>
+    <string name="bitter_font_value">bitter_font_value</string>
+    <string name="raleway_font_value">raleway_font_value</string>
+    <string name="roboto_mono_font_value">roboto_mono_font_value</string>
 
 </resources>

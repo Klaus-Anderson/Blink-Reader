@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -39,6 +40,15 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
             setTheme(R.style.DarkTheme)
         }
 
+        blinkReaderViewModel.setFont(sharedPreferences.getString(
+                getString(R.string.reading_font_preference_key), null)
+                ?: getString(R.string.raleway_font_value))
+
+        val outValue = TypedValue()
+        theme.resolveAttribute(R.attr.colorAccent, outValue, true)
+
+        blinkReaderViewModel.setAccentColor(String.format("#%06X", 0xFFFFFF and outValue.data))
+
         blinkReaderViewModel.blinkVisibilityLiveData.observe(this, { visibility ->
             if (visibility == View.VISIBLE) {
                 supportFragmentManager.fragments.firstOrNull {
@@ -71,6 +81,7 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val activityReadingBinding: ActivityReadingBinding = DataBindingUtil.setContentView(this, R.layout.activity_reading)
         activityReadingBinding.readingViewModel = blinkReaderViewModel
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -122,21 +133,25 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        if (getString(R.string.reading_speed_preference_key) == key) {
+        if (key == getString(R.string.reading_speed_preference_key)) {
             if (sharedPreferences.getInt(key, 120) < 15) {
                 sharedPreferences.edit().putInt(key, 15).apply()
             } else {
                 blinkReaderViewModel.setWpm(sharedPreferences.getInt(key, 120))
             }
-        } else if (getString(R.string.dark_theme_preference_key) == key) {
+        } else if (key == getString(R.string.dark_theme_preference_key)) {
             setTheme(if (sharedPreferences.getBoolean(key, false)) {
                 R.style.DarkTheme
             } else {
                 R.style.LightTheme
             })
             recreate()
-        } else if (getString(R.string.reading_mode_preference_key) == key) {
+        } else if (key == getString(R.string.reading_mode_preference_key)) {
             invalidateOptionsMenu()
+        } else if (key == getString(R.string.reading_font_preference_key)) {
+            sharedPreferences.getString(key, null)?.let {
+                blinkReaderViewModel.setFont(it)
+            }
         }
     }
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label ordering must match values -->
+    <array name="reading_font_preference_labels">
+        <item>@string/bitter_font_label</item>
+        <item>@string/raleway_font_label</item>
+        <item>@string/roboto_mono_font_label</item>
+    </array>
+
+    <array name="reading_font_preference_values">
+        <item>@string/bitter_font_value</item>
+        <item>@string/raleway_font_value</item>
+        <item>@string/roboto_mono_font_value</item>
+    </array>
+</resources>
