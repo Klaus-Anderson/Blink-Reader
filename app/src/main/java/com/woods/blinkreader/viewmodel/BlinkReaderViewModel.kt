@@ -9,16 +9,21 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
+import androidx.core.text.toSpanned
 import androidx.databinding.adapters.SeekBarBindingAdapter.OnProgressChanged
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.woods.blinkreader.R
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-import kotlin.math.roundToLong
+import kotlin.math.pow
 
 class BlinkReaderViewModel(application: Application) : AndroidViewModel(application) {
     val blinkTextLiveData: LiveData<String> = MutableLiveData()
@@ -30,6 +35,7 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
     val blinkVisibilityLiveData: LiveData<Int> = MutableLiveData()
     val bookVisibilityLiveData: LiveData<Int> = MutableLiveData()
     val bookTextLiveData: LiveData<Spanned> = MutableLiveData()
+    val loadingProgressBarVisibilityLiveData: LiveData<Int> = MutableLiveData()
     private val copiedTextLiveData: LiveData<String> = MutableLiveData()
     val readingFontLiveData: LiveData<Typeface> = MutableLiveData()
 
@@ -41,9 +47,14 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
     private var accentColorString = "#000000"
 
     init {
+        resetViews()
+    }
+
+    private fun resetViews() {
         (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
-        (bookTextLiveData as MutableLiveData).value = Html.fromHtml(getApplication<Application>().baseContext.getString(R.string.copy_text_instructions), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        (bookTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions).toSpanned()
         (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
+        (loadingProgressBarVisibilityLiveData as MutableLiveData).value = View.GONE
     }
 
     fun setWpm(wpm: Int) {
@@ -136,67 +147,117 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
                 playPauseButtonResIdLiveData.value == R.drawable.ic_pause_24dp
     }
 
-    private fun postValueToWordReadingProgress(progress: Int) {
+    private fun postValueToWordReadingProgress(readingProgress: Int) {
         (maxProgressLiveData as MutableLiveData).value?.let { maxProgress ->
-            if (progress <= maxProgress) {
-                (readingProgressLiveData as MutableLiveData).value = progress
+            if (readingProgress <= maxProgress) {
+                (readingProgressLiveData as MutableLiveData).value = readingProgress
 
                 wordListLiveData.value?.let {
-                    (blinkTextLiveData as MutableLiveData).value = it[progress]
+                    (blinkTextLiveData as MutableLiveData).value = it[readingProgress]
                 }
 
-                val progressPercentage = progress.toFloat().div(maxProgress)
+                // TODO: workshop the math process scrolling to follow the text on book fragment.
+                // This will work for most reading scenarios, but is specifically tuned
+                // to the requirements of 1000 words. This MAY not work for greater than 1000 words,
+                // or maybe ^.7 is the magic number for what is trying to be achieved here.
+                // Furthermore, this may have issues on different screen types.
+                // Lastly, if there is a significant imbalance in the lengths of words
+                // in the first half and second half of list, this scrolling will not work properly
+
+                val minimumThreshold = 1.0 / maxProgress.toDouble().pow(.7)
+                val maximumThreshold = 1.0 - (minimumThreshold)
+
+                val readingProgressPercentage = readingProgress.toFloat().div(maxProgress)
                 val scrollToPercentage =
-                        .1 * ((when {
-                            progressPercentage <= .1 -> {
-                                0.0
-                            }
-                            progressPercentage > .9 -> {
-                                1.0
-                            }
-                            else -> {
-                                (progressPercentage - .1) / .8
-                            }
-                        } * 100) / 10).roundToLong()
+                        when {
+                            // only begin auto-scrolling when the user has passed the minimum
+                            // threshold so text on the first line is not blocked
+                            readingProgressPercentage <= minimumThreshold -> 0.0
+                            // stop auto-scrolling and scroll the user to the end when they've
+                            // reached the maximum threshold so that the final line is completely
+                            // visible once the user has reached it
+                            readingProgressPercentage > maximumThreshold -> 1.0
+                            // if the user is within the thresholds then scroll the user through
+                            // the rest of the of view by using a proportion of reading progress
+                            //
+                            // for example:
+                            // if readingProgressPercentage is minimumThreshold, return 0
+                            // if readingProgressPercent is .5, return .5
+                            // if readingProgressPercent is is maximumThreshold, return 1
+                            else -> (readingProgressPercentage - minimumThreshold) /
+                                    (maximumThreshold - minimumThreshold) - (minimumThreshold / 2)
+                        }.let {
+                            if (it.isNaN()) 0.0 else it
+                        }
                 (scrollToPercentageLiveData as MutableLiveData).value = scrollToPercentage
 
-                var bookText = ""
-                readingProgressLiveData.value?.let { readingProgress ->
-                    wordListLiveData.value?.let {
-                        it.forEachIndexed { index, element ->
-                            bookText += if (readingProgress == index) {
-                                "<span style='background:$accentColorString'>$element</span> "
-                            } else
-                                "$element "
+                if (maxProgress < 3000)
+                    viewModelScope.launch(Dispatchers.Main) {
+                        var bookText = ""
+                        val deferred = viewModelScope.async(Dispatchers.Default) {
+                            readingProgressLiveData.value?.let { readingProgress ->
+                                wordListLiveData.value?.let {
+                                    it.forEachIndexed { index, element ->
+                                        bookText += if (readingProgress == index) {
+                                            "<span style='background:$accentColorString'>$element</span> "
+                                        } else
+                                            "$element "
+                                    }
+                                }
+                            }
+                            bookText
                         }
+                        (bookTextLiveData as MutableLiveData).value =
+                                Html.fromHtml(deferred.await(), HtmlCompat.FROM_HTML_MODE_LEGACY)
                     }
-                }
-                (bookTextLiveData as MutableLiveData).value =
-                        Html.fromHtml(bookText, HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
         }
     }
 
-    @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    fun postClipboardData(clipboard: ClipboardManager, toast: Toast) {
+    fun postClipboardData(clipboard: ClipboardManager) {
+        (loadingProgressBarVisibilityLiveData as MutableLiveData).value = View.VISIBLE
         clipboard.primaryClip?.getItemAt(0)?.let { clipDataItem ->
             if (clipDataItem.text.toString().isNotEmpty() && clipDataItem.text.toString().isNotBlank()) {
                 (copiedTextLiveData as MutableLiveData).value = clipDataItem.text.toString()
-                val wordList = clipDataItem.text.toString().split(" ", "\n", "\r", "\\s").toMutableList()
-                wordList.removeIf { it.trim().isEmpty() }
-                (wordListLiveData as MutableLiveData).value = wordList
-                (maxProgressLiveData as MutableLiveData).value = (wordList as ArrayList<String>).size - 1
-                (buttonVisibilityLiveData as MutableLiveData).value = View.VISIBLE
-                postValueToWordReadingProgress(0)
+                viewModelScope.launch(Dispatchers.Main) {
+                    val deferredWordList = viewModelScope.async(Dispatchers.Default) {
+                        val wordList = clipDataItem.text.toString().split(" ", "\n", "\r", "\\s").toMutableList()
+                        wordList.removeIf { it.trim().isEmpty() }
+                        wordList
+                    }
+
+                    (wordListLiveData as MutableLiveData).value = deferredWordList.await()
+                    (maxProgressLiveData as MutableLiveData).value = (deferredWordList.await() as ArrayList<String>).size - 1
+
+
+                    if (deferredWordList.await().size > 3000) {
+                        Toast.makeText(getApplication(), R.string.max_words_error, Toast.LENGTH_LONG).show()
+                        var bookText = ""
+                        val deferred = viewModelScope.async(Dispatchers.Default) {
+                            wordListLiveData.value?.let { wordList ->
+                                wordList.forEach {
+                                    bookText += "$it "
+                                }
+                            }
+                            bookText
+                        }
+                        (bookTextLiveData as MutableLiveData).value = deferred.await().toSpanned()
+                        loadingProgressBarVisibilityLiveData.value = View.GONE
+                        (buttonVisibilityLiveData as MutableLiveData).value = View.VISIBLE
+                        postValueToWordReadingProgress(0)
+                    } else {
+                        loadingProgressBarVisibilityLiveData.value = View.GONE
+                        (buttonVisibilityLiveData as MutableLiveData).value = View.VISIBLE
+                        postValueToWordReadingProgress(0)
+                    }
+                }
             } else {
-                (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
-                (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
-                toast.show()
+                resetViews()
+                Toast.makeText(getApplication(), R.string.paste_error, Toast.LENGTH_SHORT).show()
             }
         } ?: run {
-            (buttonVisibilityLiveData as MutableLiveData).value = View.GONE
-            (blinkTextLiveData as MutableLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
-            toast.show()
+            resetViews()
+            Toast.makeText(getApplication(), R.string.paste_error, Toast.LENGTH_SHORT).show()
         }
     }
 
