@@ -191,25 +191,22 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
                         }
                 (scrollToPercentageLiveData as MutableLiveData).value = scrollToPercentage
 
-                if (maxProgress < 3000)
-                    viewModelScope.launch(Dispatchers.Main) {
-                        var bookText = ""
-                        val deferred = viewModelScope.async(Dispatchers.Default) {
-                            readingProgressLiveData.value?.let { readingProgress ->
-                                wordListLiveData.value?.let {
-                                    it.forEachIndexed { index, element ->
-                                        bookText += if (readingProgress == index) {
-                                            "<span style='background:$accentColorString'>$element</span> "
-                                        } else
-                                            "$element "
-                                    }
-                                }
+                if (maxProgress < 500) {
+                    var bookText = ""
+                    readingProgressLiveData.value?.let { readingProgress ->
+                        wordListLiveData.value?.let {
+                            it.forEachIndexed { index, element ->
+                                bookText += if (readingProgress == index) {
+                                    "<span style='background:$accentColorString'>$element</span> "
+                                } else
+                                    "$element "
                             }
-                            bookText
                         }
-                        (bookTextLiveData as MutableLiveData).value =
-                                Html.fromHtml(deferred.await(), HtmlCompat.FROM_HTML_MODE_LEGACY)
                     }
+
+                    (bookTextLiveData as MutableLiveData).value =
+                            Html.fromHtml(bookText, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                }
             }
         }
     }
@@ -229,8 +226,7 @@ class BlinkReaderViewModel(application: Application) : AndroidViewModel(applicat
                     (wordListLiveData as MutableLiveData).value = deferredWordList.await()
                     (maxProgressLiveData as MutableLiveData).value = (deferredWordList.await() as ArrayList<String>).size - 1
 
-
-                    if (deferredWordList.await().size > 3000) {
+                    if (deferredWordList.await().size > 500) {
                         Toast.makeText(getApplication(), R.string.max_words_error, Toast.LENGTH_LONG).show()
                         var bookText = ""
                         val deferred = viewModelScope.async(Dispatchers.Default) {

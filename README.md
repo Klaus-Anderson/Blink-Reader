@@ -19,7 +19,7 @@ First production release of Blink Reader! Released features including.
 - The Book Screen, where users can read their entire text.
     - The word that is currently being displayed on the Blink Screen will be highlighted
     - The highlighted word will be followed by the scroll on the Book Screen
-- An Icon for switching between the
+- An Icon for switching between the Book and Blink Screens
 - The Preference Screen, where users can edit their preferences. Preferences include:
     - reading speed, which is the speed at which the text will change
     - a switch to turn Dark Mode on and off
