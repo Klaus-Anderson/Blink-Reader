@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/reading_preference_category_title"
+        app:iconSpaceReserved="false">
+
+        <SeekBarPreference
+            android:defaultValue="120"
+            android:key="@string/reading_speed_preference_key"
+            android:max="750"
+            android:summary="@string/reading_speed_preference_summary"
+            android:title="@string/reading_speed_preference_title"
+            app:iconSpaceReserved="false"
+            app:showSeekBarValue="true"
+            app:updatesContinuously="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/visual_preference_category_title"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/dark_theme_preference_key"
+            android:title="@string/dark_mode_preference_title"
+            app:iconSpaceReserved="false" />
+
+        <ListPreference
+            android:defaultValue="@string/raleway_font_value"
+            android:entries="@array/reading_font_preference_labels"
+            android:entryValues="@array/reading_font_preference_values"
+            android:key="@string/reading_font_preference_key"
+            android:title="@string/reading_font_preference_title"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

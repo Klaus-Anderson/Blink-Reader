@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".fragment.BlinkFragment">
+
+    <data>
+        <import type="androidx.core.content.ContextCompat" />
+        <import type="com.woods.blinkreader.R" />
+
+        <variable
+            name="readingViewModel"
+            type="com.woods.blinkreader.viewmodel.BlinkReaderViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/button_constraint_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/reading_seekbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/replay_30_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(-30)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_replay_30_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/replay_10_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                android:contentDescription="@string/replay_30_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/replay_10_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(-10)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_replay_10_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/replay_5_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/replay_30_button"
+                android:contentDescription="@string/replay_10_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/replay_5_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(-5)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_replay_5_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/replay_1_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/replay_10_button"
+                android:contentDescription="@string/replay_5_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/replay_1_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(-1)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_replay_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/playPauseButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/replay_5_button"
+                android:contentDescription="@string/replay_1_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/playPauseButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{readingViewModel.onPlayPauseButtonClickListener()}"
+                android:scaleType="fitCenter"
+                android:src="@{readingViewModel.getPlayPauseButtonResIdLiveData() == 0 ? @drawable/ic_play_arrow_24dp : ContextCompat.getDrawable(context,readingViewModel.getPlayPauseButtonResIdLiveData())}"
+                app:layout_constraintEnd_toStartOf="@+id/forward_5_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/replay_1_button"
+                android:contentDescription="@{readingViewModel.getPlayPauseButtonResIdLiveData() == R.drawable.ic_pause_24dp ? @string/pause_content_description : @string/play_content_description}"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/forward_5_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(5)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_forward_5_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/forward_10_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/playPauseButton"
+                android:contentDescription="@string/ff_5_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/forward_10_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(10)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_forward_10_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/forward_30_button"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/forward_5_button"
+                android:contentDescription="@string/ff_10_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/forward_30_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:onClick="@{() -> readingViewModel.onSkipButtonClick(30)}"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_forward_30_24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/forward_10_button"
+                android:contentDescription="@string/ff_30_content_description"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--suppress AndroidUnknownAttribute -->
+        <SeekBar
+            android:id="@+id/reading_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="10dp"
+            android:max="@{readingViewModel.maxProgressLiveData}"
+            android:maxHeight="12dp"
+            android:minHeight="6dp"
+            android:onProgressChanged="@{readingViewModel.onProgressChanged()}"
+            android:progress="@{readingViewModel.readingProgressLiveData}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_constraint_layout" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/buttons_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{readingViewModel.buttonVisibilityLiveData}"
+            app:constraint_referenced_ids="reading_seekbar, button_constraint_layout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

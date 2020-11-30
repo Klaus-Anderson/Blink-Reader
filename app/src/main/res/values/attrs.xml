@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="backgroundColor" format="color" />
+    <attr name="negativeTextColor" format="color" />
+    <attr name="greyTextColor" format="color" />
+    <attr name="lightGreyTextColor" format="color" />
+</resources>
