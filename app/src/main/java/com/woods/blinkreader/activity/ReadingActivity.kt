@@ -9,7 +9,6 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -82,6 +81,9 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
         val activityReadingBinding: ActivityReadingBinding = DataBindingUtil.setContentView(this, R.layout.activity_reading)
         activityReadingBinding.readingViewModel = blinkReaderViewModel
 
+        blinkReaderViewModel.loadingProgressBarVisibilityLiveData.observe(this, {
+            activityReadingBinding.loadingProgressBarLayout?.visibility = it
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -109,11 +111,8 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     @SuppressLint("ShowToast")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        switch (item.getItemId()) {
         if (R.id.action_paste == item.itemId) {
-            blinkReaderViewModel.postClipboardData((getSystemService(CLIPBOARD_SERVICE) as ClipboardManager),
-                    Toast.makeText(this, R.string.paste_error, Toast.LENGTH_SHORT))
-            //                break;
+            blinkReaderViewModel.postClipboardData(getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
         } else if (R.id.action_reader_switch == item.itemId) {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             if (sharedPreferences.getString(getString(R.string.reading_mode_preference_key), null) ==

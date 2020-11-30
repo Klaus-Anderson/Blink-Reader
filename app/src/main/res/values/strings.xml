@@ -3,6 +3,7 @@
     <string name="paste_icon_content_description">Paste Content to read</string>
     <string name="switch_reading_icon_content_description">Change reading view</string>
     <string name="paste_error">Could not paste content</string>
+    <string name="max_words_error">Texts with more 3000 works cannot be followed with the highlighter</string>
     <string name="copy_text_instructions">Copy text to your clipboard, then click the paste icon on
         the App Bar to speed read it!</string>
 

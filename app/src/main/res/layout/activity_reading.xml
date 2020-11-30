@@ -34,6 +34,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/reading_fragment_layout" />
 
+        <FrameLayout
+            android:id="@+id/loading_progress_bar_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?attr/backgroundColor"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/reading_seekbar_fragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleX=".33333333333333"
+                android:scaleY=".33333333333333" />
+        </FrameLayout>
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/preferences_fragment"
             android:name="com.woods.blinkreader.fragment.PreferencesFragment"
