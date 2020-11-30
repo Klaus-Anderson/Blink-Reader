@@ -7,6 +7,8 @@ displaying one word at a time, the user doesn't have to move their eyes, and can
 the words per minute at which the text displays.
 
 The inception for Blink Reader was initially conceived of 2019, but was mostly developed during 2020.
+Blink Reader is written entirely using Kotlin, and Utilized Android JetPack components including
+ViewModel and LiveData.
 
 Release Notes
 ## Version 1.0
