@@ -12,19 +12,16 @@ import com.woods.blinkreader.databinding.FragmentBlinkBindingImpl
 import com.woods.blinkreader.viewmodel.BlinkReaderViewModel
 
 class BlinkFragment : Fragment() {
-    lateinit var blinkReaderViewModel: BlinkReaderViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val toReturnView = inflater.inflate(R.layout.fragment_blink, container, false)
-
-        blinkReaderViewModel = ViewModelProvider(
-            viewModelStore,
-            BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
-        )[BlinkReaderViewModel.implClass]
-
-        val fragmentBlinkBinding: FragmentBlinkBindingImpl? = DataBindingUtil.bind(toReturnView)
-        fragmentBlinkBinding?.lifecycleOwner = this
-        fragmentBlinkBinding?.readingViewModel = blinkReaderViewModel
-        return toReturnView
+        return inflater.inflate(R.layout.fragment_blink, container, false)?.also {
+                DataBindingUtil.bind<FragmentBlinkBindingImpl>(it)?.apply {
+                    lifecycleOwner = this@BlinkFragment
+                    readingViewModel = ViewModelProvider(
+                        viewModelStore,
+                        BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
+                    )[BlinkReaderViewModel.implClass]
+                }
+            }
     }
 }

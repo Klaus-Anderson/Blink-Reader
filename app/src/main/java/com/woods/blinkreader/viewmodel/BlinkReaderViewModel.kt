@@ -83,6 +83,8 @@ class BlinkReaderViewModelImpl(application: Application) : BlinkReaderViewModel,
     }
 
     private fun resetViews() {
+        blinkVisibilityLiveData.value = View.VISIBLE
+        bookVisibilityLiveData.value = View.GONE
         (blinkTextLiveData).value = getApplication<Application>().baseContext.getString(R.string.copy_text_instructions)
         bookTextLiveData.value =
             getApplication<Application>().baseContext.getString(R.string.copy_text_instructions).toSpanned()

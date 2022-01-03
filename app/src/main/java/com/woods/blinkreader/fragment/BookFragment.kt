@@ -14,26 +14,23 @@ import com.woods.blinkreader.viewmodel.BlinkReaderViewModel
 import kotlin.math.max
 
 class BookFragment : Fragment() {
-    lateinit var blinkReaderViewModel: BlinkReaderViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val toReturnView = inflater.inflate(R.layout.fragment_book, container, false)
-
-        blinkReaderViewModel = ViewModelProvider(
-            viewModelStore,
-            BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
-        )[BlinkReaderViewModel.implClass]
-
-        val fragmentBookBinding: FragmentBookBindingImpl? = DataBindingUtil.bind(toReturnView)
-        fragmentBookBinding?.lifecycleOwner = this
-        fragmentBookBinding?.readingViewModel = blinkReaderViewModel
-
-        blinkReaderViewModel.scrollToPercentageLiveData.observe(viewLifecycleOwner) {
-            val scrollView = fragmentBookBinding?.bookScrollView as ScrollView
-            val maxScrollAmount = max(0, scrollView.getChildAt(0).height - (scrollView.height))
-            val scrollToAmount = it * maxScrollAmount
-            scrollView.scrollTo(0, scrollToAmount.toInt())
+        return inflater.inflate(R.layout.fragment_book, container, false).also { view ->
+            DataBindingUtil.bind<FragmentBookBindingImpl>(view)?.also { binding ->
+                binding.lifecycleOwner = this
+                binding.readingViewModel = ViewModelProvider(
+                    viewModelStore,
+                    BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
+                )[BlinkReaderViewModel.implClass].apply {
+                    scrollToPercentageLiveData.observe(viewLifecycleOwner) {
+                        val scrollView = binding.bookScrollView as ScrollView
+                        val maxScrollAmount = max(0, scrollView.getChildAt(0).height - (scrollView.height))
+                        val scrollToAmount = it * maxScrollAmount
+                        scrollView.scrollTo(0, scrollToAmount.toInt())
+                    }
+                }
+            }
         }
-        return toReturnView
     }
 }
