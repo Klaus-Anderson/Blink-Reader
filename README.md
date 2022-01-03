@@ -10,7 +10,7 @@ The inception for Blink Reader was initially conceived of 2019, but was mostly d
 Blink Reader is written entirely using Kotlin, and Utilized Android JetPack components including
 ViewModel and LiveData.
 
-Release Notes
+###Release Notes:
 ## Version 1.0
 First production release of Blink Reader! Released features including.
 - The Blink Screen, where users can read one word a time.

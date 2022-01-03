@@ -4,14 +4,16 @@ import android.annotation.SuppressLint
 import android.content.ClipboardManager
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.woods.blinkreader.R
 import com.woods.blinkreader.databinding.ActivityReadingBinding
@@ -21,69 +23,79 @@ import com.woods.blinkreader.viewmodel.BlinkReaderViewModel
 
 
 class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
-    private val blinkReaderViewModel: BlinkReaderViewModel by viewModels()
+    lateinit var blinkReaderViewModel: BlinkReaderViewModel
 
-    @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        blinkReaderViewModel = ViewModelProvider(
+            viewModelStore, BlinkReaderViewModel.BlinkReaderViewModelFactory(application)
+        )[BlinkReaderViewModel.implClass]
 
         setTitle(R.string.app_name)
 
         // get and display preferences
-        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-        if (sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
-            blinkReaderViewModel.setWpm(sharedPreferences.getInt(getString(R.string.reading_speed_preference_key), 0))
+        PreferenceManager.getDefaultSharedPreferences(this).apply {
+            registerOnSharedPreferenceChangeListener(this@ReadingActivity)
+            if (getInt(getString(R.string.reading_speed_preference_key), 0) != 0) {
+                blinkReaderViewModel.setWpm(getInt(getString(R.string.reading_speed_preference_key), 0))
+            }
+            if (getBoolean(getString(R.string.dark_theme_preference_key), false)) {
+                setTheme(R.style.DarkTheme)
+            }
+
+            blinkReaderViewModel.setFont(
+                getString(
+                    getString(R.string.reading_font_preference_key), null
+                ) ?: getString(R.string.raleway_font_value)
+            )
         }
-        if (sharedPreferences.getBoolean(getString(R.string.dark_theme_preference_key), false)) {
-            setTheme(R.style.DarkTheme)
-        }
 
-        blinkReaderViewModel.setFont(sharedPreferences.getString(
-                getString(R.string.reading_font_preference_key), null)
-                ?: getString(R.string.raleway_font_value))
+        blinkReaderViewModel.setAccentColor(
+            String.format(
+                "#%06X", 0xFFFFFF and TypedValue().getAttribute(theme, R.attr.colorAccent).data
+            )
+        )
 
-        val outValue = TypedValue()
-        theme.resolveAttribute(R.attr.colorAccent, outValue, true)
-
-        blinkReaderViewModel.setAccentColor(String.format("#%06X", 0xFFFFFF and outValue.data))
-
-        blinkReaderViewModel.blinkVisibilityLiveData.observe(this, { visibility ->
-            if (visibility == View.VISIBLE) {
-                supportFragmentManager.fragments.firstOrNull {
+        blinkReaderViewModel.blinkVisibilityLiveData.observe(this) { visibility ->
+            when (visibility) {
+                View.VISIBLE -> supportFragmentManager.fragments.firstOrNull {
                     it is BlinkFragment
-                } ?: supportFragmentManager.beginTransaction()
-                        .add(R.id.reading_fragment_layout, BlinkFragment()).commit()
-            } else if (visibility == View.GONE) {
-                supportFragmentManager.fragments.forEach {
+                } ?: supportFragmentManager.beginTransaction().add(R.id.reading_fragment_layout, BlinkFragment())
+                    .commit()
+                View.GONE -> supportFragmentManager.fragments.forEach {
                     if (it is BlinkFragment) {
                         supportFragmentManager.beginTransaction().remove(it).commit()
                     }
                 }
             }
-        })
+        }
 
-        blinkReaderViewModel.bookVisibilityLiveData.observe(this, { visibility ->
-            if (visibility == View.VISIBLE) {
-                supportFragmentManager.fragments.firstOrNull {
-                    it is BookFragment
-                } ?: supportFragmentManager.beginTransaction()
-                        .add(R.id.reading_fragment_layout, BookFragment()).commit()
-            } else if (visibility == View.GONE) {
-                supportFragmentManager.fragments.forEach {
-                    if (it is BookFragment) {
-                        supportFragmentManager.beginTransaction().remove(it).commit()
-                    }
-                }
-            }
-        })
+        blinkReaderViewModel.bookVisibilityLiveData.observe(this) { visibility ->
+            replaceFragment(visibility, BookFragment())
+        }
 
-        val activityReadingBinding: ActivityReadingBinding = DataBindingUtil.setContentView(this, R.layout.activity_reading)
+        val activityReadingBinding: ActivityReadingBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_reading)
         activityReadingBinding.readingViewModel = blinkReaderViewModel
 
-        blinkReaderViewModel.loadingProgressBarVisibilityLiveData.observe(this, {
+        blinkReaderViewModel.loadingProgressBarVisibilityLiveData.observe(this) {
             activityReadingBinding.loadingProgressBarLayout?.visibility = it
-        })
+        }
+    }
+
+    private fun replaceFragment(visibility: Int, fragment: Fragment) {
+        when (visibility) {
+            View.VISIBLE -> supportFragmentManager.fragments.firstOrNull {
+                it::class == fragment::class
+            } ?: supportFragmentManager.beginTransaction().add(R.id.reading_fragment_layout, fragment)
+                .commit()
+            View.GONE -> supportFragmentManager.fragments.forEach {
+                if (it::class == fragment::class) {
+                    supportFragmentManager.beginTransaction().remove(it).commit()
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -101,9 +113,8 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
                     blinkReaderViewModel.switchReadingView(getString(R.string.reading_mode_blink_preference_value))
                 }
             } ?: sharedPreferences.edit().putString(
-                    getString(R.string.reading_mode_preference_key),
-                    getString(R.string.reading_mode_blink_preference_value))
-                    .apply()
+                getString(R.string.reading_mode_preference_key), getString(R.string.reading_mode_blink_preference_value)
+            ).apply()
         }
 
         return true
@@ -115,17 +126,19 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
             blinkReaderViewModel.postClipboardData(getSystemService(CLIPBOARD_SERVICE) as ClipboardManager)
         } else if (R.id.action_reader_switch == item.itemId) {
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-            if (sharedPreferences.getString(getString(R.string.reading_mode_preference_key), null) ==
-                    getString(R.string.reading_mode_blink_preference_value)) {
+            if (sharedPreferences.getString(
+                    getString(R.string.reading_mode_preference_key), null
+                ) == getString(R.string.reading_mode_blink_preference_value)
+            ) {
                 sharedPreferences.edit().putString(
-                        getString(R.string.reading_mode_preference_key),
-                        getString(R.string.reading_mode_book_preference_value))
-                        .apply()
+                    getString(R.string.reading_mode_preference_key),
+                    getString(R.string.reading_mode_book_preference_value)
+                ).apply()
             } else {
                 sharedPreferences.edit().putString(
-                        getString(R.string.reading_mode_preference_key),
-                        getString(R.string.reading_mode_blink_preference_value))
-                        .apply()
+                    getString(R.string.reading_mode_preference_key),
+                    getString(R.string.reading_mode_blink_preference_value)
+                ).apply()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -139,11 +152,13 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 blinkReaderViewModel.setWpm(sharedPreferences.getInt(key, 120))
             }
         } else if (key == getString(R.string.dark_theme_preference_key)) {
-            setTheme(if (sharedPreferences.getBoolean(key, false)) {
-                R.style.DarkTheme
-            } else {
-                R.style.LightTheme
-            })
+            setTheme(
+                if (sharedPreferences.getBoolean(key, false)) {
+                    R.style.DarkTheme
+                } else {
+                    R.style.LightTheme
+                }
+            )
             recreate()
         } else if (key == getString(R.string.reading_mode_preference_key)) {
             invalidateOptionsMenu()
@@ -154,4 +169,9 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
     }
 
+}
+
+private fun TypedValue.getAttribute(theme: Resources.Theme, resId: Int): TypedValue {
+    theme.resolveAttribute(R.attr.colorAccent, this, true)
+    return this
 }
