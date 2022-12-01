@@ -18,8 +18,7 @@ class BlinkFragment : Fragment() {
                 DataBindingUtil.bind<FragmentBlinkBindingImpl>(it)?.apply {
                     lifecycleOwner = this@BlinkFragment
                     readingViewModel = ViewModelProvider(
-                        viewModelStore,
-                        BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
+                        requireActivity()
                     )[BlinkReaderViewModel.implClass]
                 }
             }

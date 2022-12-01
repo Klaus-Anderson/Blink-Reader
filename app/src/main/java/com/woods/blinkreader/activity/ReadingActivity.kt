@@ -29,7 +29,7 @@ class ReadingActivity : AppCompatActivity(), OnSharedPreferenceChangeListener {
         super.onCreate(savedInstanceState)
 
         blinkReaderViewModel = ViewModelProvider(
-            viewModelStore, BlinkReaderViewModel.BlinkReaderViewModelFactory(application)
+            this
         )[BlinkReaderViewModel.implClass]
 
         setTitle(R.string.app_name)

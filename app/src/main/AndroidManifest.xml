@@ -9,9 +9,10 @@
         android:fullBackupContent="@xml/backup_descriptor"
         android:supportsRtl="true">
         <activity
-            android:name=".activity.ReadingActivity"
-            android:label="@string/app_name"
-            android:theme="@style/LightTheme">
+                android:name=".activity.ReadingActivity"
+                android:label="@string/app_name"
+                android:theme="@style/LightTheme"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

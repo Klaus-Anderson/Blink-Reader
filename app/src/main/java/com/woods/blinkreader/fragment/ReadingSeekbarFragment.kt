@@ -17,8 +17,7 @@ class ReadingSeekbarFragment : Fragment() {
             DataBindingUtil.bind<FragmentReadingSeekbarBindingImpl>(it)?.apply {
                 lifecycleOwner = this@ReadingSeekbarFragment
                 readingViewModel = ViewModelProvider(
-                    viewModelStore,
-                    BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
+                    requireActivity()
                 )[BlinkReaderViewModel.implClass]
             }
 

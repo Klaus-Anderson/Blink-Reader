@@ -20,8 +20,7 @@ class BookFragment : Fragment() {
             DataBindingUtil.bind<FragmentBookBindingImpl>(view)?.also { binding ->
                 binding.lifecycleOwner = this
                 binding.readingViewModel = ViewModelProvider(
-                    viewModelStore,
-                    BlinkReaderViewModel.BlinkReaderViewModelFactory(activity!!.application)
+                    requireActivity()
                 )[BlinkReaderViewModel.implClass].apply {
                     scrollToPercentageLiveData.observe(viewLifecycleOwner) {
                         val scrollView = binding.bookScrollView as ScrollView
